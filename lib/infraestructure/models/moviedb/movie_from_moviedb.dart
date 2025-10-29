@@ -8,7 +8,7 @@ class MovieFromMovieDB {
     final String overview;
     final double popularity;
     final String posterPath;
-    final DateTime releaseDate;
+    final DateTime? releaseDate;
     final String title;
     final bool video;
     final double voteAverage;
@@ -33,35 +33,41 @@ class MovieFromMovieDB {
 
     factory MovieFromMovieDB.fromJson(Map<String, dynamic> json) => MovieFromMovieDB(
         adult: json["adult"] ?? false,
-        backdropPath: json["backdrop_path"],
+        backdropPath: json["backdrop_path"] ?? '',
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
         originalLanguage: json["original_language"],
         originalTitle: json["original_title"],
         overview: json["overview"] ?? '',
         popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
-        releaseDate: DateTime.parse(json["release_date"]),
+        posterPath: json["poster_path"] ?? '',
+        // releaseDate: DateTime.parse(json["release_date"]),
+        releaseDate: json["release_date"] != null && json["release_date"].toString().isNotEmpty ? DateTime.parse(json["release_date"]) : null,
         title: json["title"],
         video: json["video"],
         voteAverage: json["vote_average"]?.toDouble(),
         voteCount: json["vote_count"],
     );
 
-    Map<String, dynamic> toJson() => {
-        "adult": adult,
-        "backdrop_path": backdropPath,
-        "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
-        "id": id,
-        "original_language": originalLanguage,
-        "original_title": originalTitle,
-        "overview": overview,
-        "popularity": popularity,
-        "poster_path": posterPath,
-        "release_date": "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
-        "title": title,
-        "video": video,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-    };
+    Map<String, dynamic> toJson() {
+        final rd = releaseDate;
+        return {
+          "adult": adult,
+          "backdrop_path": backdropPath,
+          "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
+          "id": id,
+          "original_language": originalLanguage,
+          "original_title": originalTitle,
+          "overview": overview,
+          "popularity": popularity,
+          "poster_path": posterPath,
+          "release_date": rd == null
+              ? null
+              : "${rd.year.toString().padLeft(4, '0')}-${rd.month.toString().padLeft(2, '0')}-${rd.day.toString().padLeft(2, '0')}",
+          "title": title,
+          "video": video,
+          "vote_average": voteAverage,
+          "vote_count": voteCount,
+        };
+    }
 }

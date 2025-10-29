@@ -22,7 +22,12 @@ class MovieDbResponse {
     });
 
     factory MovieDbResponse.fromJson(Map<String, dynamic> json) => MovieDbResponse(
-        dates: Dates.fromJson(json["dates"]),
+        dates: (json["dates"] is Map<String, dynamic>)
+            ? Dates.fromJson(json["dates"])
+            : Dates(
+                maximum: DateTime.now(),
+                minimum: DateTime.now(),
+              ),
         page: json["page"],
         results: List<MovieFromMovieDB>.from(json["results"].map((x) => MovieFromMovieDB.fromJson(x))),
         totalPages: json["total_pages"],
@@ -48,8 +53,12 @@ class Dates {
     });
 
     factory Dates.fromJson(Map<String, dynamic> json) => Dates(
-        maximum: DateTime.parse(json["maximum"]),
-        minimum: DateTime.parse(json["minimum"]),
+        maximum: (json["maximum"] != null && json["maximum"].toString().isNotEmpty)
+            ? DateTime.parse(json["maximum"])
+            : DateTime.now(),
+        minimum: (json["minimum"] != null && json["minimum"].toString().isNotEmpty)
+            ? DateTime.parse(json["minimum"])
+            : DateTime.now(),
     );
 
     Map<String, dynamic> toJson() => {

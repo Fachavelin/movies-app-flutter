@@ -17,7 +17,7 @@ class MovieMapper {
             ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
             // : 'https://i.stack.imgur.com/GNhxO.png',
             : 'no-poster',
-        releaseDate: movie.releaseDate,
+        releaseDate: movie.releaseDate ?? DateTime(1900, 1, 1),
         title: movie.title,
         video: movie.video,
         voteAverage: movie.voteAverage,
